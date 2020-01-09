@@ -215,7 +215,7 @@
 #define CONFIG_RK32_DSI
 #endif /* CONFIG_RKCHIP_RK3126 */
 
-#undef CONFIG_UBOOT_CHARGE
+#define CONFIG_UBOOT_CHARGE
 
 #else
 
