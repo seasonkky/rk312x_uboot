@@ -396,6 +396,10 @@ void pmic_rk818_power_on(void){
 	//mdelay(120);
 }
 
+void pmic_rk818_power_off_lcm(void){
+	rk818_regulator_disable(RK818_LDO4);
+}
+
 void pmic_rk818_power_off(void){
 	//gpio_direction_output(LCD_EN_PIN,0);
 

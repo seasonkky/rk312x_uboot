@@ -19,6 +19,8 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
+extern void pmic_rk818_power_off_lcm(void);
+
 #ifdef CONFIG_CMD_FASTBOOT
 extern void fbt_fastboot_init(void);
 #endif
@@ -103,7 +105,8 @@ enum fbt_reboot_type board_fbt_get_reboot_type(void)
 				break;
 			case BOOT_LOADER:
 #ifdef CONFIG_CMD_ROCKUSB
-				printf("reboot to rockusb.\n");
+				printf("reboot to rockusb.then disable lcm ldo4\n");
+				pmic_rk818_power_off_lcm();
 				do_rockusb(NULL, 0, 0, NULL);
 #endif
 				break;
