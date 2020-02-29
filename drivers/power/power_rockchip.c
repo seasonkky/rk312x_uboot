@@ -18,7 +18,7 @@ struct regulator_init_reg_name regulator_init_pmic_matches[MAX_REGULATOR_NUM];
 
 #if defined(CONFIG_POWER_RK818)
 #define CONFIG_RK818_SCREEN_ON_VOL_THRESD	3000
-#define CONFIG_RK818_SYSTEM_ON_VOL_THRESD	3600
+#define CONFIG_RK818_SYSTEM_ON_VOL_THRESD	3500
 #define CONFIG_RK818_SYSTEM_ON_CAPACITY_THRESD  5
 
 extern void pmic_rk818_power_init(void);

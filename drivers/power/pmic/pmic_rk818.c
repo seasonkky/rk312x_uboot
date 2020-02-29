@@ -388,7 +388,7 @@ void pmic_rk818_power_init(void){
 void pmic_rk818_power_on(void){
 	rk818_regulator_enable(RK818_LDO4);
 	rk818_regulator_enable(RK818_LDO6);
-	//rk818_regulator_enable(RK818_LDO9);
+	rk818_regulator_enable(RK818_LDO7);
 	//rk818_regulator_enable(RK818_LDO10);
 	
 	//gpio_direction_output(LCD_EN_PIN,1);

@@ -402,7 +402,7 @@ void board_fbt_preboot(void)
 #endif
 
 	frt = board_fbt_get_reboot_type();
-	if ((frt == FASTBOOT_REBOOT_UNKNOWN) || (frt == FASTBOOT_REBOOT_NORMAL)) {
+	if ((frt == FASTBOOT_REBOOT_UNKNOWN) /*|| (frt == FASTBOOT_REBOOT_NORMAL)*/) {
 		FBTDBG("\n%s: no spec reboot type, check key press.\n", __func__);
 		frt = board_fbt_key_pressed();
 	} else {
