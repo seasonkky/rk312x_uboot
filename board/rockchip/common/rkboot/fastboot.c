@@ -411,7 +411,8 @@ void board_fbt_preboot(void)
 	}
 
 #ifdef CONFIG_RK_POWER
-	board_fbt_low_power_check();
+	if(!is_charging())
+		board_fbt_low_power_check();
 #endif
 
 #ifdef CONFIG_LCD
@@ -436,6 +437,7 @@ void board_fbt_preboot(void)
 
 #ifdef CONFIG_UBOOT_CHARGE
 	//check charge mode when no key pressed.
+	printf("ck frt:%d\n",frt);
 	if (((frt == FASTBOOT_REBOOT_UNKNOWN) && board_fbt_is_charging()) \
 		|| (frt == FASTBOOT_REBOOT_CHARGE)) {
 #ifdef CONFIG_CMD_CHARGE_ANIM
