@@ -250,6 +250,28 @@ static int rk818_set_regulator_init(struct fdt_regulator_match *matches, int num
 	return ret;
 }
 
+static int wacom_parse_dt(const void* blob)
+{
+       struct fdt_gpio_state ctl_pin;
+       struct fdt_gpio_state rst_pin;
+       int node = fdt_node_offset_by_compatible(blob,0,"wacom_i2c");
+       if (node < 0) {
+               printf("can't find dts node for led\n");
+               return -ENODEV;
+       }
+
+       fdtdec_decode_gpio(blob, node, "ctl_gpios", &ctl_pin);
+       fdtdec_decode_gpio(blob, node, "reset_gpios", &rst_pin);
+
+       printf("wacom ctl_gpios:%d,reset_gpios:%d\n",ctl_pin.gpio,rst_pin.gpio);
+
+       gpio_direction_output(ctl_pin.gpio, 1);
+       gpio_set_value(ctl_pin.gpio, 1);
+
+       gpio_direction_output(rst_pin.gpio, 0);
+       gpio_set_value(rst_pin.gpio, 0);
+}
+
 static int rk818_parse_dt(const void* blob)
 {
 	int node, nd;
@@ -355,6 +377,7 @@ int pmic_rk818_init(unsigned char bus)
 		ret = rk818_parse_dt(gd->fdt_blob);
 		if (ret < 0)
 			return ret;
+		wacom_parse_dt(gd->fdt_blob);
 	}
 
 	rk818.pmic->interface = PMIC_I2C;

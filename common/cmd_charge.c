@@ -21,6 +21,7 @@
 #include <power/pmic.h>
 #include <resource.h>
 #include <asm/arch/rkplat.h>
+DECLARE_GLOBAL_DATA_PTR;
 
 /*#define DEBUG*/
 #define LOGE(fmt, args...) printf(fmt "\n", ##args)
@@ -632,6 +633,32 @@ void rk_timer1_isr(void){
 }
 #endif /* CONFIG_CHARGE_TIMER_WAKEUP */
 
+static int wacom_parse_dt(const void* blob)
+{
+	struct fdt_gpio_state ctl_pin;
+	struct fdt_gpio_state rst_pin;
+	int node = fdt_node_offset_by_compatible(blob,0,"wacom_i2c");
+	if (node < 0) {
+		printf("can't find dts node for led\n");
+		return -ENODEV;
+	}
+
+	fdtdec_decode_gpio(blob, node, "ctl_gpios", &ctl_pin);
+	fdtdec_decode_gpio(blob, node, "reset_gpios", &rst_pin);
+
+	printf("wacom ctl_gpios:%d,reset_gpios:%d\n",ctl_pin.gpio,rst_pin.gpio);
+
+	gpio_direction_output(ctl_pin.gpio, 1);
+	gpio_set_value(ctl_pin.gpio, 1);
+
+	gpio_direction_output(rst_pin.gpio, 0);
+	gpio_set_value(rst_pin.gpio, 0);
+
+	mdelay(200);
+	gpio_set_value(ctl_pin.gpio, 0);
+	gpio_set_value(rst_pin.gpio, 1);
+}
+
 
 int do_charge(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
@@ -793,6 +820,7 @@ exit:
 		#endif
 
 		printf("booting...\n");
+		wacom_parse_dt(gd->fdt_blob);
 		return 1;
 	} else if (exit_type == EXIT_SHUTDOWN) {
 		#ifdef CONFIG_POWER_FG_ADC
