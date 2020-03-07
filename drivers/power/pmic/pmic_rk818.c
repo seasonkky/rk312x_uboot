@@ -410,6 +410,7 @@ void pmic_rk818_power_init(void){
 
 void pmic_rk818_power_on(void){
 	rk818_regulator_enable(RK818_LDO4);
+	rk818_regulator_enable(RK818_LDO5);
 	rk818_regulator_enable(RK818_LDO6);
 	rk818_regulator_enable(RK818_LDO7);
 	//rk818_regulator_enable(RK818_LDO10);
@@ -421,6 +422,13 @@ void pmic_rk818_power_on(void){
 
 void pmic_rk818_power_off_lcm(void){
 	rk818_regulator_disable(RK818_LDO4);
+	rk818_regulator_disable(RK818_LDO5);
+}
+
+void pmic_rk818_power_on_lcm(void)
+{
+	rk818_regulator_enable(RK818_LDO4);
+	rk818_regulator_enable(RK818_LDO5);
 }
 
 void pmic_rk818_power_off(void){
