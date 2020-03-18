@@ -254,22 +254,55 @@ static int wacom_parse_dt(const void* blob)
 {
        struct fdt_gpio_state ctl_pin;
        struct fdt_gpio_state rst_pin;
+       struct fdt_gpio_state charge_pin;
+       struct fdt_gpio_state charge1_pin;
+       struct fdt_gpio_state charge2_pin;
+       struct fdt_gpio_state charge3_pin;
+       struct fdt_gpio_state charge4_pin;
        int node = fdt_node_offset_by_compatible(blob,0,"wacom_i2c");
        if (node < 0) {
                printf("can't find dts node for led\n");
                return -ENODEV;
        }
 
+       grf_writel((1 << (8 + 16)) | (0 << 8), GRF_SOC_CON0);
+       int val = grf_readl(GRF_GPIO1C_IOMUX);
+	val |= (1<<(10+16)); //write_enable 使能bit10
+    	val &= ~(1<<10);
+       grf_writel(val,GRF_GPIO1C_IOMUX);
+
+	val |= (1<<(11+16)); //write_enable 使能bit11
+        val &= ~(1<<11);
+       grf_writel(val,GRF_GPIO1C_IOMUX);
+       printf("wacom read GRF_GPIO1C_IOMUX:%x\n", readl(GRF_GPIO1C_IOMUX));
+
        fdtdec_decode_gpio(blob, node, "ctl_gpios", &ctl_pin);
        fdtdec_decode_gpio(blob, node, "reset_gpios", &rst_pin);
+       fdtdec_decode_gpio(blob, node, "charge_gpios",&charge_pin); 
+       fdtdec_decode_gpio(blob, node, "charge1_gpios",&charge1_pin); 
+       fdtdec_decode_gpio(blob, node, "charge2_gpios",&charge2_pin); 
+       fdtdec_decode_gpio(blob, node, "charge3_gpios",&charge3_pin); 
+       fdtdec_decode_gpio(blob, node, "charge4_gpios",&charge4_pin); 
 
-       printf("wacom ctl_gpios:%d,reset_gpios:%d\n",ctl_pin.gpio,rst_pin.gpio);
+	 printf("wacom ctl_gpios:%d,reset_gpios:%d,1:%d,2:%d,3:%d,4:%d\n",ctl_pin.gpio,rst_pin.gpio,charge1_pin.gpio,charge2_pin.gpio,charge3_pin.gpio,charge4_pin.gpio);
 
        gpio_direction_output(ctl_pin.gpio, 1);
        gpio_set_value(ctl_pin.gpio, 1);
 
        gpio_direction_output(rst_pin.gpio, 0);
        gpio_set_value(rst_pin.gpio, 0);
+
+       gpio_direction_output(charge_pin.gpio, 0);
+       gpio_set_value(charge_pin.gpio, 0);
+
+       gpio_direction_output(charge1_pin.gpio, 0);
+       gpio_set_value(charge1_pin.gpio, 0);
+       gpio_direction_output(charge2_pin.gpio, 0);
+       gpio_set_value(charge2_pin.gpio, 0);
+       gpio_direction_output(charge3_pin.gpio, 0);
+       gpio_set_value(charge3_pin.gpio, 0);
+
+	printf("wacom gpio value 1,:%d,2:%d,3:%d\n",gpio_get_value(charge1_pin.gpio),gpio_get_value(charge2_pin.gpio),gpio_get_value(charge3_pin.gpio));
 }
 
 static int rk818_parse_dt(const void* blob)

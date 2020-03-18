@@ -246,7 +246,7 @@ int rk_fb_pwr_enable(struct rockchip_fb *fb)
 	struct pwr_ctr *pwr_ctr;
 	
 	/* disable force iomux to jtag */
-	grf_writel((1 << (8 + 16)) | (0 << 8), GRF_SOC_CON0);
+	//grf_writel((1 << (8 + 16)) | (0 << 8), GRF_SOC_CON0);
 	if (list_empty(&fb->pwrlist_head))
 		return 0;
 	list_for_each(pos, &fb->pwrlist_head) {

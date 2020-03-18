@@ -692,6 +692,10 @@ int do_charge(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	power_pmic_init();
 #endif /* CONFIG_CHARGE_DEEP_SLEEP */
 
+	gpio_direction_output(526, 0);
+        gpio_set_value(526,0);
+        gpio_direction_output(520, 1);
+        gpio_set_value(520,1);
 	/* enbale fb buffer flip */
 	lcd_enable_flip(true);
 
@@ -702,7 +706,7 @@ int do_charge(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 			LOGD("should quit charge");
 			goto exit;
 		}
-	
+
 		#ifdef CONFIG_POWER_FG_ADC
 		charge_last_time = get_timer(charge_start_time);
 		if(adc_charge_status()==2){
@@ -741,6 +745,7 @@ int do_charge(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 
 		//step 3: check power key pressed state.
 		key_state = power_key_pressed();
+
 		if (key_state) {
 			LOGD("key pressed state:%d", key_state);
 		}

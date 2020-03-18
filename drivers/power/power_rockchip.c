@@ -139,6 +139,9 @@ int is_power_low(void)
 	ret = get_power_bat_status(&battery);
 	if (ret < 0)
 		return 0;
+
+	if(battery.state_of_chrg)
+		return 0;
 #if defined(CONFIG_POWER_RK818)
 	if (rockchip_pmic_id == PMIC_ID_RK818)
 		return ((battery.voltage_uV < CONFIG_RK818_SYSTEM_ON_VOL_THRESD) \
@@ -159,6 +162,8 @@ int is_power_extreme_low(void)
 	ret = get_power_bat_status(&battery);
 	if (ret < 0)
 		return 0;
+	if(battery.state_of_chrg)
+                return 0;
 	return (battery.voltage_uV < CONFIG_SCREEN_ON_VOL_THRESD) ? 1 : 0;
 }
 
